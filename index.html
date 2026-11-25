@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Lugar Seguro</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Pantalla de Login -->
+        <section id="screen-login" class="screen active">
+            <div class="login-container">
+                <h1 class="logo">Lugar Seguro</h1>
+                <p class="tagline">Tu refugio. Un lugar sin ruido ni juicios.</p>
+                <form id="login-form">
+                    <input type="email" id="login-email" placeholder="Email" required>
+                    <input type="password" id="login-password" placeholder="Contraseña" required>
+                    <button type="submit" class="btn-primary">Entrar</button>
+                </form>
+                <button id="btn-google" class="btn-secondary">Continuar con Google</button>
+                <p class="divider">o</p>
+                <p class="register-link">¿No tienes cuenta? <a href="#" id="link-register">Crear cuenta</a></p>
+                <p class="forgot-link"><a href="#" id="link-forgot">¿Olvidaste tu contraseña?</a></p>
+            </div>
+        </section>
+
+        <!-- Pantalla de Registro -->
+        <section id="screen-register" class="screen">
+            <div class="login-container">
+                <h1 class="logo">Crear cuenta</h1>
+                <p class="tagline">Tu espacio personal te espera.</p>
+                <form id="register-form">
+                    <input type="email" id="register-email" placeholder="Email" required>
+                    <input type="password" id="register-password" placeholder="Contraseña (mínimo 6 caracteres)" required>
+                    <button type="submit" class="btn-primary">Crear cuenta</button>
+                </form>
+                <p class="register-link">¿Ya tienes cuenta? <a href="#" id="link-login">Iniciar sesión</a></p>
+            </div>
+        </section>
+
+        <!-- Pantalla de Recuperar Contraseña -->
+        <section id="screen-forgot" class="screen">
+            <div class="login-container">
+                <button id="btn-back-forgot" class="btn-back"><img src="img/volver.png" alt="Volver" class="back-icon"></button>
+                <h1 class="logo">Recuperar acceso</h1>
+                <p class="tagline">Te enviaremos un enlace para restablecer tu contraseña.</p>
+                <form id="forgot-form">
+                    <input type="email" id="forgot-email" placeholder="Email" required>
+                    <button type="submit" class="btn-primary">Enviar enlace</button>
+                </form>
+                <p class="forgot-help">Revisa tu bandeja de entrada o spam. El enlace expira en 1 hora.</p>
+            </div>
+        </section>
+
+        <!-- Pantalla de Bienvenida -->
+        <section id="screen-welcome" class="screen">
+            <div class="welcome-container">
+                <h2>Bienvenido a tu refugio</h2>
+                <p>Un lugar sin ruido ni juicios.</p>
+                <div class="theme-selector">
+                    <p>Elige tu tema:</p>
+                    <div class="theme-options">
+                        <button class="theme-btn active" data-theme="dark">Oscuro</button>
+                        <button class="theme-btn" data-theme="light">Claro</button>
+                    </div>
+                </div>
+                <div class="pin-setup">
+                    <p>Crea un PIN de 4 dígitos para proteger tu diario y resúmenes.</p>
+                    <input type="password" id="pin-input" maxlength="4" placeholder="****" inputmode="numeric">
+                    <button id="btn-save-pin" class="btn-primary">Guardar PIN</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pantalla de Home -->
+        <section id="screen-home" class="screen">
+            <div class="home-container">
+                <div class="registro-section">
+                    <p class="registro-label">¿Cómo está tu energía hoy?</p>
+                    <div class="emoji-slider">
+                        <input type="range" id="energy-slider" min="1" max="5" value="3" step="1">
+                    </div>
+                    <p class="emoji-text" id="emoji-text">😐 Serio / neutral</p>
+                    <button id="btn-save-registro" class="btn-primary" style="display:none;">Guardar</button>
+                </div>
+                <div class="breathe-section">
+                    <button id="btn-breathe" class="breathe-btn">
+                        <span>Respirar</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pantalla de Respiración -->
+        <section id="screen-breathing" class="screen">
+            <div class="breathing-container">
+                <div class="breathing-countdown-container">
+                    <p class="breathing-countdown-label">segundos</p>
+                    <p class="breathing-countdown" id="breathing-countdown">120</p>
+                </div>
+                <div class="breathing-circle" id="breathing-circle"></div>
+                <p class="breathing-text" id="breathing-text">Inhala...</p>
+                <p class="breathing-ground" id="breathing-ground"></p>
+                <button id="btn-stop-breathing" class="btn-secondary">Terminar ciclo</button>
+            </div>
+        </section>
+
+        <!-- Pantalla de Resúmenes -->
+        <section id="screen-summaries" class="screen">
+            <div class="summaries-container">
+                <div class="pin-gate" id="pin-gate-summaries">
+                    <img src="img/candado.png" alt="Candado" class="pin-icon">
+                    <p class="pin-title">Contenido protegido</p>
+                    <p class="pin-subtitle">Ingresa tu PIN para continuar</p>
+                    <input type="password" id="pin-input-summaries" maxlength="4" inputmode="numeric" class="pin-input">
+                    <button id="btn-verify-pin-summaries" class="btn-primary">Desbloquear</button>
+                </div>
+                <div class="calendar-section" id="calendar-section" style="display:none;">
+                    <div class="calendar-header">
+                        <button id="btn-prev-month" class="nav-btn"><img src="img/volver.png" alt="Anterior" class="nav-arrow-img"></button>
+                        <h3 id="month-year"></h3>
+                        <button id="btn-next-month" class="nav-btn"><img src="img/adelante.png" alt="Siguiente" class="nav-arrow-img"></button>
+                    </div>
+                    <div class="calendar-grid" id="calendar-grid"></div>
+                    <div class="metrics-section">
+                        <div class="metric-card">
+                            <p class="metric-value" id="metric-control">0</p>
+                            <p class="metric-label">Tomas de control este mes</p>
+                        </div>
+                        <div class="metric-card">
+                            <p class="metric-value" id="metric-time">0</p>
+                            <p class="metric-label">Minutos de pausa</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pantalla de Diario -->
+        <section id="screen-journal" class="screen">
+            <div class="journal-container">
+                <div class="pin-gate" id="pin-gate-journal">
+                    <img src="img/candado.png" alt="Candado" class="pin-icon">
+                    <p class="pin-title">Contenido protegido</p>
+                    <p class="pin-subtitle">Ingresa tu PIN para continuar</p>
+                    <input type="password" id="pin-input-journal" maxlength="4" inputmode="numeric" class="pin-input">
+                    <button id="btn-verify-pin-journal" class="btn-primary">Desbloquear</button>
+                </div>
+                <div class="journal-menu" id="journal-menu" style="display:none;">
+                    <h2>Diario</h2>
+                    <div class="journal-menu-options">
+                        <button id="btn-write-today" class="journal-menu-card">
+                            <img src="img/editar.png" alt="Escribir" class="journal-menu-icon-img">
+                            <span class="journal-menu-title">Escribir hoy</span>
+                            <span class="journal-menu-desc">Crea tu entrada de hoy</span>
+                        </button>
+                        <button id="btn-view-history" class="journal-menu-card">
+                            <img src="img/historial.png" alt="Historial" class="journal-menu-icon-img">
+                            <span class="journal-menu-title">Ver historial</span>
+                            <span class="journal-menu-desc">Lee tus entradas anteriores</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="journal-content" id="journal-content" style="display:none;">
+                    <button id="btn-back-menu" class="btn-back"><img src="img/volver.png" alt="Volver" class="back-icon"></button>
+                    <h3>Diario - <span id="journal-date"></span></h3>
+                    <div class="tags-section">
+                        <p>Etiquetas rápidas:</p>
+                        <div class="tags-cloud" id="tags-cloud"></div>
+                        <div class="custom-tag-input">
+                            <input type="text" id="custom-tag" placeholder="Nueva etiqueta...">
+                            <button id="btn-add-tag" class="btn-small">+</button>
+                        </div>
+                    </div>
+                    <textarea id="journal-text" placeholder="Vuelca tu mente aquí..."></textarea>
+                    <button id="btn-save-journal" class="btn-primary">Guardar</button>
+                </div>
+                <div class="journal-history" id="journal-history" style="display:none;">
+                    <button id="btn-back-history" class="btn-back"><img src="img/volver.png" alt="Volver" class="back-icon"></button>
+                    <h3>Historial</h3>
+                    <div class="history-list" id="history-list"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pantalla de SOS -->
+        <section id="screen-sos" class="screen">
+            <div class="sos-container">
+                <h2>Respiraciones</h2>
+                <p class="sos-subtitle">¿Qué necesitas ahora?</p>
+                <div class="sos-options">
+                    <button id="btn-grounding" class="sos-card">
+                        <span class="sos-icon">5-4-3-2-1</span>
+                        <span class="sos-title">Anclaje rápido</span>
+                        <span class="sos-desc">Aterriza en la realidad</span>
+                    </button>
+                    <button id="btn-impact-breathing" class="sos-card">
+                        <span class="sos-icon">Respiración</span>
+                        <span class="sos-title">Respiración de impacto</span>
+                        <span class="sos-desc">3-5 minutos intensos</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pantalla de Ajustes -->
+        <section id="screen-settings" class="screen">
+            <div class="settings-container">
+                <h2>Ajustes</h2>
+                <div class="settings-group">
+                    <h3>Audio</h3>
+                    <div class="audio-control">
+                        <label class="audio-toggle">
+                            <span>Música de fondo</span>
+                            <input type="checkbox" id="toggle-music" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="audio-control">
+                        <label class="audio-toggle">
+                            <span>Respiración guiada</span>
+                            <input type="checkbox" id="toggle-guided" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="audio-control">
+                        <span class="audio-label">Volumen</span>
+                        <input type="range" id="volume-slider" min="0" max="100" value="50">
+                    </div>
+                </div>
+                <div class="settings-group">
+                    <h3>Tema</h3>
+                    <div class="theme-options">
+                        <button class="theme-btn active" data-theme="dark">Oscuro</button>
+                        <button class="theme-btn" data-theme="light">Claro</button>
+                    </div>
+                </div>
+                <div class="settings-group">
+                    <h3>Seguridad</h3>
+                    <button id="btn-change-pin" class="btn-secondary">Cambiar PIN</button>
+                </div>
+                <div class="settings-group">
+                    <h3>App</h3>
+                    <button id="btn-install" class="btn-secondary">Descargar app</button>
+                </div>
+                <div class="settings-group">
+                    <h3>Cuenta</h3>
+                    <button id="btn-logout" class="btn-secondary">Cerrar sesión</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav" id="bottom-nav" style="display:none;">
+            <button class="nav-item" data-screen="summaries">
+                <img src="img/resumenes.png" alt="Resúmenes" class="nav-icon-img">
+                <span class="nav-label">Resúmenes</span>
+            </button>
+            <button class="nav-item" data-screen="journal">
+                <img src="img/diario.png" alt="Diario" class="nav-icon-img">
+                <span class="nav-label">Diario</span>
+            </button>
+            <button class="nav-item nav-center" data-screen="home">
+                <img src="img/home.png" alt="Inicio" class="nav-icon-img">
+                <span class="nav-label">Inicio</span>
+            </button>
+            <button class="nav-item" data-screen="sos">
+                <img src="img/respiraciones.png" alt="Respiraciones" class="nav-icon-img">
+                <span class="nav-label">Respiraciones</span>
+            </button>
+            <button class="nav-item" data-screen="settings">
+                <img src="img/ajustes.png" alt="Ajustes" class="nav-icon-img">
+                <span class="nav-label">Ajustes</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Audio Elements -->
+    <audio id="audio-fondo" loop preload="auto">
+        <source src="audios/fondo de app.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-inhalar" preload="auto">
+        <source src="audios/inhalar.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-sosten" preload="auto">
+        <source src="audios/sosten.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-exhalar" preload="auto">
+        <source src="audios/exhalar.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+
+    <!-- bcrypt (PIN) para navegador -->
+    <script src="js/vendor/bcrypt.js"></script>
+
+    <!-- App Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/breathing.js"></script>
+    <script src="js/journal.js"></script>
+    <script src="js/calendar.js"></script>
+    <script src="js/sos.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js');
+            });
+        }
+    </script>
+</body>
+</html>
