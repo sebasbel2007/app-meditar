@@ -1,4 +1,4 @@
-const CACHE_NAME = 'lugar-seguro-v3';
+const CACHE_NAME = 'lugar-seguro-v4';
 const urlsToCache = [
     './',
     './index.html',
