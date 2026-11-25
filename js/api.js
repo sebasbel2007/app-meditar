@@ -1,6 +1,8 @@
 // La app ya no depende de un backend Express.
 // Se conecta directamente a Firestore (SDK de Firebase en el navegador).
-const firestoreRef = firebase.firestore();
+function getDb() {
+    return firebase.firestore();
+}
 
 function getUid() {
     const user = firebase.auth().currentUser;
@@ -17,7 +19,7 @@ function getNowDateStr() {
 
 async function getUserDoc() {
     const uid = getUid();
-    const snap = await firestoreRef.collection('users').doc(uid).get();
+    const snap = await getDb().collection('users').doc(uid).get();
     return snap;
 }
 
@@ -34,7 +36,7 @@ async function createPin(pin) {
     const pinHash = await bcrypt.hash(pin, 10);
     const uid = getUid();
     const { FieldValue } = firebase.firestore;
-    await firestoreRef.collection('users').doc(uid).set({
+    await getDb().collection('users').doc(uid).set({
         pinHash,
         createdAt: FieldValue.serverTimestamp()
     }, { merge: true });
@@ -56,7 +58,7 @@ async function saveCheckin(energyLevel) {
     const uid = getUid();
     const dateStr = getNowDateStr();
     const { FieldValue } = firebase.firestore;
-    await firestoreRef.collection('checkins').add({
+    await getDb().collection('checkins').add({
         userId: uid,
         date: dateStr,
         energyLevel,
@@ -66,7 +68,7 @@ async function saveCheckin(energyLevel) {
 
 async function getCheckins(startDate, endDate) {
     const uid = getUid();
-    let query = firestoreRef.collection('checkins').where('userId', '==', uid);
+    let query = getDb().collection('checkins').where('userId', '==', uid);
     if (startDate) {
         query = query.where('date', '>=', startDate);
     }
@@ -85,7 +87,7 @@ async function saveBreathingSession(durationSeconds, completed) {
     const uid = getUid();
     const dateStr = getNowDateStr();
     const { FieldValue } = firebase.firestore;
-    await firestoreRef.collection('breathingSessions').add({
+    await getDb().collection('breathingSessions').add({
         userId: uid,
         date: dateStr,
         durationSeconds,
@@ -96,7 +98,7 @@ async function saveBreathingSession(durationSeconds, completed) {
 
 async function getBreathingSessions() {
     const uid = getUid();
-    const snapshot = await firestoreRef.collection('breathingSessions')
+    const snapshot = await getDb().collection('breathingSessions')
         .where('userId', '==', uid)
         .get();
     const sessions = [];
@@ -109,7 +111,7 @@ async function getBreathingSessions() {
 async function saveJournal(date, tags, text) {
     const uid = getUid();
     const { FieldValue } = firebase.firestore;
-    const existing = await firestoreRef.collection('journalEntries')
+    const existing = await getDb().collection('journalEntries')
         .where('userId', '==', uid)
         .where('date', '==', date)
         .get();
@@ -123,12 +125,12 @@ async function saveJournal(date, tags, text) {
     };
 
     if (existing.empty) {
-        await firestoreRef.collection('journalEntries').add({
+        await getDb().collection('journalEntries').add({
             ...entryData,
             timestamp: FieldValue.serverTimestamp()
         });
     } else {
-        const docRef = firestoreRef.collection('journalEntries').doc(existing.docs[0].id);
+        const docRef = getDb().collection('journalEntries').doc(existing.docs[0].id);
         await docRef.update({
             tags: tags || [],
             text: text || '',
@@ -139,7 +141,7 @@ async function saveJournal(date, tags, text) {
 
 async function getJournal(date) {
     const uid = getUid();
-    const snapshot = await firestoreRef.collection('journalEntries')
+    const snapshot = await getDb().collection('journalEntries')
         .where('userId', '==', uid)
         .where('date', '==', date)
         .get();
@@ -152,7 +154,7 @@ async function getJournal(date) {
 
 async function getJournals() {
     const uid = getUid();
-    const snapshot = await firestoreRef.collection('journalEntries')
+    const snapshot = await getDb().collection('journalEntries')
         .where('userId', '==', uid)
         .get();
     const entries = [];
@@ -165,7 +167,7 @@ async function getJournals() {
 async function updateSettings(settings) {
     const uid = getUid();
     const { FieldValue } = firebase.firestore;
-    await firestoreRef.collection('users').doc(uid).set({
+    await getDb().collection('users').doc(uid).set({
         settings,
         updatedAt: FieldValue.serverTimestamp()
     }, { merge: true });
@@ -173,7 +175,7 @@ async function updateSettings(settings) {
 
 async function getSettings() {
     const uid = getUid();
-    const snap = await firestoreRef.collection('users').doc(uid).get();
+    const snap = await getDb().collection('users').doc(uid).get();
     if (!snap.exists) {
         return {};
     }
@@ -183,7 +185,7 @@ async function getSettings() {
 async function saveSosSession(type, durationMinutes = null) {
     const uid = getUid();
     const { FieldValue } = firebase.firestore;
-    await firestoreRef.collection('sosSessions').add({
+    await getDb().collection('sosSessions').add({
         userId: uid,
         type,
         durationMinutes: durationMinutes || null,
@@ -208,5 +210,5 @@ const api = {
 };
 
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { api, firestoreRef };
+    module.exports = { api };
 }
